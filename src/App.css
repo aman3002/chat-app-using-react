@@ -1,0 +1,96 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.header {
+  width: 100%;
+  background-color: black;
+  color: plum;
+  height: 5%;
+}
+
+body {
+  background-image: url("./assests/ok.avif");
+  background-repeat:no-repeat;
+  background-size: cover;
+}
+
+.window {
+  height: 300px; /* Add a height to see the container */
+  width: 50%;
+  background-color: black;
+  border: 2px solid red;
+  margin-left:25vw;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+.footer{
+  margin-left:30vw;
+}
+.foot{
+  width:50%;
+}
+
+.message{
+  background-color: white;
+  margin:10px;
+  margin-right:20px;
+  margin-left: 20px;
+
+  padding:10px;
+  width:24%;
+  border: 2px solid white;
+  border-radius: 4px;
+}
+.footr{
+  margin-left:45vw;
+}
+.left{
+  clear: both;
+  float: left;
+}
+.right{
+  clear:both;
+  float: right;
+}
+.input{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top:20%;
+ 
+}
