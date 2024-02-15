@@ -60,3 +60,6 @@ socket.on("userjoined",(data)=>{
 socket.on("dist",data=>{
     appends(`${data} left the chat`, "right")
 })
+socket.on("alert",()=>{
+  alert("user already exits")
+})
