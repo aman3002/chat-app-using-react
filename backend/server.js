@@ -11,7 +11,7 @@ const localstra=require("passport-local").Strategy
 const expressSession = require('express-socket.io-session'); // Integration library
 const create=require("./practice")
 const add=require("./add")
-const RedisStore = require('connect-redis')(session);
+const RedisStore = require('connect-redis').default; // Change here
 const redis = require('redis');
 const check=require("./check")
 const bodyParser = require("body-parser");
@@ -23,7 +23,7 @@ const sessionMiddleware =app.use(session({
   saveUninitialized: true,
 }));
 let z,q;
-app.use(sessionMiddleware);
+// app.use(sessionMiddleware);
 let p=[];
 
 app.use(express.static(path.join(__dirname)));
