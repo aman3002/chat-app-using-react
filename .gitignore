@@ -10,7 +10,7 @@
 
 link.txtx
 # production
-config.env
+.env
 # misc
 .DS_Store
 .env.local
