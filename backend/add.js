@@ -10,6 +10,7 @@ async function add_data(user,pass){
             console.log("created");
         }
     });
+    connet.end()
 
 }
 async function add_message(users,user,mess,room,position){
@@ -22,6 +23,7 @@ async function add_message(users,user,mess,room,position){
            console.log("message_added");
        }
    });
+   connet.end()
 
 }
 async function getUser(username) {
@@ -38,6 +40,8 @@ async function getUser(username) {
       } else {
           return null; // Return null if no user is found
       }
+      connection.end()
+
   } catch (error) {
       throw error;
   }
@@ -56,7 +60,8 @@ async function getUser(username) {
       } else {
           return null; // Return null if no user is found
       }
-    
+      connection.end()
+
     } catch (error) {
       throw error;
     }

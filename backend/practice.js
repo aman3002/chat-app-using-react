@@ -9,5 +9,7 @@ async function create(user){
           console.log(" table created");
       }
   });
+  connet.end()
+
 }
 module.exports=create;

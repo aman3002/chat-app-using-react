@@ -16,6 +16,8 @@ async function create() {
                 }
             });
         });
+        connection.end()
+
     } catch (error) {
         throw error;
     }
