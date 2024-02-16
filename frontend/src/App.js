@@ -2,7 +2,7 @@ import './App.css';
 import io from "socket.io-client"
 import C from "./Cjat"
 import React,{useState,useEffect} from "react"
-const socket = io.connect("https://chat-server-bvmd.onrender.com",{transports:["websocket"]});
+const socket = io.connect("https://chat-server-lctb.onrender.com",{transports:["websocket"]});
 function App() {
   
   const [name,setname]=useState("")

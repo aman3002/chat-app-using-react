@@ -2,153 +2,84 @@ const express = require("express");
 const http = require("http");
 const path = require("path");
 const cors = require("cors");
-const sessionStorage = require("sessionstorage");
 const socketIo = require("socket.io");
-const session = require("express-session");
-const passport = require("passport");
-const localstra = require("passport-local").Strategy;
+const bodyParser = require("body-parser");
 const create = require("./practice");
 const add = require("./add");
 const check = require("./check");
-const bodyParser = require("body-parser");
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+const users = {};
 
-const sessionMiddleware = session({
-  secret: 'hello',
-  resave: false,
-  saveUninitialized: true
-});
-
-let z, q, p = [];
-
-app.use(sessionMiddleware);
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.use(new localstra({
-  passReqToCallback: true
-},
-  async (req, username, password, done) => {
-    try {
-      sessionStorage.setItem("username", username);
-      const user = await add.getUser(username);
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (user.password !== password) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    } catch (err) {
-      return done(err);
-    }
-  }
-));
-
-passport.serializeUser((user, done) => {
-  done(null, user.username);
-});
-
-passport.deserializeUser((id, done) => {
-  done(null, id);
-});
-
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT"],
-  allowedHeaders: [
-    "Content-Type",
-    "X-Auth-Token",
-    "Origin",
-    "Authorization",
-    "Access-Control-Allow-Headers",
-    "Access-Control-Allow-Origin",
-    "Accept",
-    "X-Requested-With",
-    "Access-Control-Request-Method",
-    "Access-Control-Request-Headers",
-  ],
-  credentials: true,
-}));
-
-io.use((socket, next) => {
-  sessionMiddleware(socket.request, socket.request.res || {}, next);
-});
+app.use(cors());
 
 io.on("connection", async (socket) => {
-
-  socket.on("new-user", async (w) => {
-    q = w.name;
-    z = w.room;
-
-    let l = 0;
-    let a1 = await check();
-
-    if (a1) {
-      a1.forEach((item) => {
-        if (q == item) {
-          l = 1;
+    socket.on("new-user", async (w) => {
+        const { name, room, pass } = w;
+        let l = 0;
+        let a1 = await check();
+        
+        if (a1) {
+            a1.forEach((item) => {
+                if (name === item) {
+                    l = 1;
+                }
+            });
         }
-      });
-    }
 
-    if (l == 1) {
-      socket.join(z);
-
-      let a = await add.get_data(q, z);
-
-      p.push(q);
-      let message = { "message": q + " joined", "position": "right" };
-      socket.to(z).emit("userjoined", message);
-      socket.emit("lost", a);
-    }
-    else {
-      socket.join(z);
-
-      await create(q);
-      await add.add_data(q, w.pass);
-
-      p.push(q);
-      let message = { "message": q + " joined", "position": "right" };
-      socket.to(z).emit("userjoined", message);
-    }
-  });
-
-  socket.on("login", async (aw) => {
-    let p = await add.getUser(aw.email);
-    if (p.password == aw.pass) {
-      socket.emit("ok", true);
-      let a = await add.get_data(aw.email, aw.room);
-      socket.emit("lost", a);
-    }
-    else {
-      socket.emit("fail", false);
-    }
-  });
-
-  socket.on("send", async (message) => {
-    const chatMessage = { data: p, message: message.message, name: q, room: z, position: "left" };
-
-    chatMessage.data.forEach(async (item) => {
-      await add.add_message(chatMessage.name, item, chatMessage.message, chatMessage.room, chatMessage.position);
+        if (l === 1) {
+            socket.join(room);
+            let data = await add.get_data(name, room);
+            users[socket.id] = name;
+            io.to(socket.id).emit("lost", data);
+            io.to(room).emit("userjoined", { message: name + " joined", position: "right" });
+        } else {
+            socket.join(room);
+            await create(name);
+            await add.add_data(name, pass);
+            users[socket.id] = name;
+            let data = await add.get_data(name, room);
+            io.to(socket.id).emit("lost", data);
+            io.to(room).emit("userjoined", { message: name + " joined", position: "right" });
+        }
     });
 
-    socket.to(chatMessage.room).emit("new-receive", chatMessage);
-  });
+    socket.on("login", async (aw) => {
+        const { email, pass, room } = aw;
+        let user = await add.getUser(email);
+        
+        if (user && user.password === pass) {
+            socket.emit("ok", true);
+            let data = await add.get_data(email, room);
+            io.to(socket.id).emit("lost", data);
+        } else {
+            socket.emit("fail", false);
+        }
+    });
 
-  socket.on("disconnect", () => {
-    const userName = q;
-    socket.leave(z);
-    p = p.filter((item) => item !== userName);
+    socket.on("send", async (message) => {
+        const { data, message: msg, room } = message;
+        const name = users[socket.id];
+        const position = "left";
+        data.forEach(async (item) => {
+            await add.add_message(name, item, msg, room, position);
+        });
+        io.to(room).emit("new-receive", { data, message: msg, name, room, position });
+    });
 
-    let useName = { "message": userName + " left the chat", "position": "right" };
-    socket.to(z).emit("dist", useName);
-  });
+    socket.on("disconnect", () => {
+        const userName = users[socket.id];
+        const room = Object.keys(socket.rooms).find(room => room !== socket.id); // Get room
+        socket.leave(room);
+        users[socket.id] = null;
+        io.to(room).emit("dist", { message: userName + " left the chat", position: "right" });
+    });
 });
 
-server.listen(8001);
+server.listen(8001, () => {
+    console.log("Server is running on port 8001");
+});
