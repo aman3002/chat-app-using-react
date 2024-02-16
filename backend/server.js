@@ -9,9 +9,9 @@ const session=require("express-session")
 const passport=require("passport")
 const localstra=require("passport-local").Strategy
 const expressSession = require('express-socket.io-session'); // Integration library
-const create=require("../database/practice")
-const add=require("../database/add")
-const check=require("../database/check")
+const create=require("./practice")
+const add=require("./add")
+const check=require("./check")
 const bodyParser = require("body-parser");
 const sessionMiddleware = session({
   secret: 'hello',
@@ -114,10 +114,14 @@ else{
     socket.to(z).emit("userjoined",l);
 }})
  socket.on("login",async(aw)=>{
+  console.log(aw)
   let p=await add.getUser(aw.email);
   console.log(p,aw)
   if(p.password==aw.pass){
     socket.emit("ok",true)
+    let a=await add.get_data(aw.email,aw.room)
+    io.to(socket.id).emit("lost",a)
+
   }
   else{
     socket.emit("fail",false)

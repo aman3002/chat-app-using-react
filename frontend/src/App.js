@@ -30,9 +30,8 @@ function App() {
     if(name!=="" && room!==""){
       console.log("1234")
       console.log(name+room)
-    socket.emit("new-user",{"name":name,"room":room,"pass":pass})
-    socket.emit("login",{"email":name ,"pass":pass})
- 
+    // socket.emit("new-user",{"name":name,"room":room,"pass":pass})
+    socket.emit("login",{"email":name ,"pass":pass,"room":room})
   }}
   const joined=()=>{
     console.log("ok")

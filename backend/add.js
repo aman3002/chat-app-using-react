@@ -25,29 +25,28 @@ async function add_message(users,user,mess,room,position){
 
 }
 async function getUser(username) {
-    try {
+  try {
       const connection = await connect();
-      const query = util.promisify(connection.query).bind(connection);
-      const quer = `SELECT * FROM passwords WHERE username = "${username}"`;
-      const result = await query(quer);
+      console.log("why")
+      const query = await util.promisify(connection.query).bind(connection);
+      const quer = `SELECT * FROM passwords WHERE username = ?`; // Using a placeholder for the username
+      const result = await query(quer, [username]); // Pass the username as an array to the query function
 
       if (result.length > 0) {
-
           const user = { username: result[0].username, password: result[0].password };
-
           return user;
       } else {
           return null; // Return null if no user is found
       }
-    
-    } catch (error) {
+  } catch (error) {
       throw error;
-    }
   }
+}
+
   async function get_data(user,room) {
     try {
       const connection = await connect();
-      const query = util.promisify(connection.query).bind(connection);
+      const query = await util.promisify(connection.query).bind(connection);
       const quer = `SELECT * FROM ${user} WHERE (room=${room} ) `;
       const result = await query(quer);
 
