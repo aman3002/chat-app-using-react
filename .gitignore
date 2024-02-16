@@ -21,3 +21,6 @@ link.txtx
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Ignore config.env file inside the backend folder
+/backend/config.env
