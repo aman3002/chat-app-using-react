@@ -13,11 +13,13 @@ const create=require("./practice")
 const add=require("./add")
 const check=require("./check")
 const bodyParser = require("body-parser");
-const sessionMiddleware = session({
-  secret: 'hello',
+const redisClient = redis.createClient();
+const sessionMiddleware =app.use(session({
+  store: new RedisStore({ client: redisClient }),
+  secret: 'your-secret-key',
   resave: false,
-  saveUninitialized: true
-});
+  saveUninitialized: true,
+}));
 let z,q;
 app.use(sessionMiddleware);
 let p=[];
