@@ -16,13 +16,14 @@ function App() {
   const [joins,setjoin]=useState(0)
   const [room,setroom]=useState("")
   let [kl,setkl]=useState(0);
+  const [pl,setpl]=useState(0)
   let [uses,setuses]=useState(0)
   let [alerts,setalert]=useState(0)
   let [alerts2,setalert2]=useState(0)
   let [pass,setpass]=useState("")
  useEffect(()=>{
   socket.on("fail",async(data)=>{
-    return setkl(0)
+    return setpl(1)
   })
   socket.on("ok",()=>{
     return setkl(1)
@@ -74,6 +75,9 @@ socket.once("alert2", () => {
       <br/>
       <button onClick={join} className="input" >submit</button>
       <div>
+        {
+          pl==1?<h4>user does not exist</h4>:""
+        }
         {
           alerts2==1?<h4>user is already in the room</h4>:""
         }

@@ -118,7 +118,8 @@ io.on("connection", async (socket) => {
         j=1
       }
     })}
-    if(j!=1){
+    const data_user=await check();
+    if(j!=1 && data_user.includes(aw.email)){
     let l = await add.getUser(aw.email);
     if (l.password == aw.pass) {
       [q,z]=[aw.email,aw.room]
