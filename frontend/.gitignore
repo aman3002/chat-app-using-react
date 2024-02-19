@@ -24,3 +24,4 @@ yarn-error.log*
 
 # Ignore config.env file inside the backend folder
 /backend/config.env
+/frontend/node_modules

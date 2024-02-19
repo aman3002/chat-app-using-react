@@ -1,8 +1,9 @@
 import './App.css';
 import io from "socket.io-client"
 import C from "./Cjat"
+import img from "./ok.avif"
 import React,{useState,useEffect} from "react"
-const socket = io.connect("https://chat-server-lctb.onrender.com",{transports:["websocket"]});
+const socket = io.connect("http://localhost:8001",{transports:["websocket"]});
 function App() {
   
   const [name,setname]=useState("")
@@ -16,12 +17,14 @@ function App() {
   const [room,setroom]=useState("")
   let [kl,setkl]=useState(0);
   let [uses,setuses]=useState(0)
+  let [alerts,setalert]=useState(0)
+  let [alerts2,setalert2]=useState(0)
   let [pass,setpass]=useState("")
  useEffect(()=>{
   socket.on("fail",async(data)=>{
     return setkl(0)
   })
-  socket.on("ok",(data)=>{
+  socket.on("ok",()=>{
     return setkl(1)
   })
   })
@@ -39,46 +42,73 @@ function App() {
       console.log("1234")
       console.log(name+room)
     socket.emit("new-user",{"name":name,"room":room,"pass":pass})
-    setkl(1)
   }}
   
+ // Define a flag variable to track whether the alert has been shown
+// Listen for the "alert" event from the socket
+socket.once("alert", () => {
+  // Display the alert
+  setalert(1)
+});
+socket.once("alert2", () => {
+  // Display the alert
+  setalert2(1)
+});
   return (
-    uses===0?<div className='input'>
-      <button onClick={()=>{setjoin(1);
-      setuses(1)}}>login</button>
-      <br/><button onClick={()=>{setjoin(0);
-      setuses(1)}}>sign up</button>
+    uses===0?<div className='loginsign'>
+      <div><button  className='b1' onClick={()=>{setjoin(1);
+      setuses(1)}}>login</button></div>
+      <div>
+      <br/><button className='b2' onClick={()=>{setjoin(0);
+      setuses(1)}}>sign up</button></div>
     </div>:
     joins===1?
     kl===0?
-    <div className="input">
-      <br/><input type='text' placeholder='user' value={name} required onChange={(event)=>{setname(event.target.value)}} />
+    <div className='container'>
+    <div className="form">
+      <br/><input className="input" type='text' placeholder='user' value={name} required onChange={(event)=>{setname(event.target.value)}} />
       <br/>
-      <input required type='text' placeholder="pass" value={pass} onChange={(event)=>{setpass(event.target.value)}}/>
+      <input required type='text'  className="input" placeholder="pass" value={pass} onChange={(event)=>{setpass(event.target.value)}}/>
       <br/>
-      <input required type='text' placeholder="room" value={room} onChange={(event)=>{setroom(event.target.value)}}/>
+      <input required type='text' placeholder="room" className="input" value={room} onChange={(event)=>{setroom(event.target.value)}}/>
       <br/>
-      <button onClick={join} >submit</button>
+      <button onClick={join} className="input" >submit</button>
+      <div>
+        {
+          alerts2==1?<h4>user is already in the room</h4>:""
+        }
+      </div>
+      </div>
       </div>
       :
-      <div>
+      <div style={{backgroundImage:`url(${img})`,height:'100vh',width:'100vw', 'background-size': 'cover','background-position': 'center top'}} >
       <C socket={socket} user={name} room={room} />
 
     </div>
     :
     kl===0?
-    <div className="text">
+    <div className='container'> 
+    <div className="form">
       <br/>
-      <input type='text' required placeholder='user' value={name} onChange={(event)=>{setname(event.target.value)}} />
+      <input type='text' className="input" required placeholder='user' value={name} onChange={(event)=>{setname(event.target.value)}} />
       <br/>
-      <input type='text' required placeholder="pass" value={pass} onChange={(event)=>{setpass(event.target.value)}}/>
+      <input type='text' className="input" required placeholder="pass" value={pass} onChange={(event)=>{setpass(event.target.value)}}/>
       <br/>
-      <input type='text' required placeholder="room" value={room} onChange={(event)=>{setroom(event.target.value)}}/>
+      <input type='text' className="input" required placeholder="room" value={room} onChange={(event)=>{setroom(event.target.value)}}/>
       <br/>
-      <button onClick={joined} >submit</button>
+      <button onClick={joined} className="input" >submit</button>
+      <div>
+        {alerts==1?
+          <h4>username is already taken</h4>:""
+        }
+        {
+          alerts2==1?<h4>user is already in the room</h4>:""
+        }
+      </div>
+      </div>
       </div>
       :
-      <div>
+      <div style={{backgroundImage:`url(${img})`,height:'100vh',width:'100vw','backgroundSize':'cover'}}>
       <C socket={socket} user={name} room={room} />
 
     </div> 

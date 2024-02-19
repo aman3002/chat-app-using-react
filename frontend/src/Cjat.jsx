@@ -4,6 +4,7 @@ import "./App.css";
 function Chat({ socket, user, room }) { // Changed Cjat to Chat
   const [message, setMess] = useState(""); // Changed setMess to setMessage
   const [messages, setMessages] = useState([]);
+  const [data,setdata]=useState([])
 
   const send = async () => {
     if (message !== "") {
@@ -14,6 +15,7 @@ function Chat({ socket, user, room }) { // Changed Cjat to Chat
         position: "right",
       };
       setMessages(prevMessages => [...prevMessages, mess]);
+      console.log("ok",mess)
       await socket.emit("send", mess);
       setMess("");
     }
@@ -21,6 +23,11 @@ function Chat({ socket, user, room }) { // Changed Cjat to Chat
   
 
   useEffect(() => {
+    const online = (p) => {
+      setdata(p);
+      console.log(data, p, "ftfgiuyhiuy");
+    };
+    
     const handleLost = (chatMessage) => {
       console.log("getted")
       console.log(chatMessage)
@@ -50,22 +57,25 @@ function Chat({ socket, user, room }) { // Changed Cjat to Chat
     const joined=(message)=>{
       console.log("##################################################################################################################S")
       setMessages((nosse)=>[...nosse,message]);
+      socket.emit("ok2")
     };
     const dist=(messa)=>{
       setMessages((no)=>[...no,messa]);
     };
+    socket.on("online",online)
     socket.on("lost", handleLost);
     socket.on("new-receive", handleReceive); // Corrected event name
     socket.on("userjoined",joined)
     socket.on("dist",dist)
     return () => {
+      socket.off("online",online)
       socket.off("lost", handleLost);
       socket.off("new-receive", handleReceive); // Corrected event name
       socket.off("userjoined",joined)
       socket.off("dist",dist)
     
     };
-  }, [socket]);
+  }, [socket,data]);
 
   return (
     <div>
@@ -94,6 +104,19 @@ function Chat({ socket, user, room }) { // Changed Cjat to Chat
           onChange={(e) => setMess(e.target.value)}
         />
         <button onClick={send}>Send</button>
+      </div>
+
+      <div className="on2">
+      <h5>online users</h5>
+      <div className="online">
+  {data.map((item, index) => (
+    <div key={index}>
+      <h6>{item},&nbsp;</h6>
+    </div>
+  ))}
+</div>
+
+
       </div>
     </div>
   );

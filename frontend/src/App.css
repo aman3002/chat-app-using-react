@@ -43,11 +43,7 @@
   height: 5%;
 }
 
-body {
-  background-image: url("./ok.avif");
-  background-repeat:no-repeat;
-  background-size: cover;
-}
+
 
 .window {
   height: 300px; /* Add a height to see the container */
@@ -61,10 +57,22 @@ body {
 .footer{
   margin-left:30vw;
 }
+.online{
+  border:2px solid black;
+  background-color: white;
+  width:10vw;
+  display: flex;
+  color:black;
+margin-left:10vw;}
 .foot{
   width:50%;
 }
-
+body {
+  background-image: url("./images.jpg"); /* Specify the path to your image */
+  background-position: center center; /* Center the image */
+  overflow: hidden;
+  background-attachment: fixed; /* Fix the background image to prevent scrolling */
+}
 .message{
   background-color: white;
   margin:10px;
@@ -87,10 +95,77 @@ body {
   clear:both;
   float: right;
 }
-.input{
+
+
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top:20%;
- 
+  margin-top: 10vh;
+  height: 80vh; /* Set a fixed height for the container */
+}
+
+
+.form {
+  display: grid;
+  align-items: center;
+  border: 2px solid black;
+  padding: 10px; /* Adjust padding */
+  width: 40%;
+  border-radius: 10%;
+  color: black;
+  background-color:whitesmoke; /* Set background color with transparency */
+  backdrop-filter: blur(10px); /* Add backdrop filter for additional transparency effect */
+  -webkit-backdrop-filter: blur(10px); 
+  height: 100%;
+  margin-top: 2vh;
+  
+}
+
+.input {
+  border: 2px solid black;
+  padding: 10px;
+  height: 20%;
+  background-color: black;
+  color: white;
+
+}
+.input:hover{
+  height:40%;
+}
+
+.on2{
+  display: inline-flex;
+  padding:0;
+  margin-right:0px;
+  font-size: 20px;
+}
+
+h1 {
+  margin: 0; 
+  color:black;
+  text-align: center;/* Remove default margin */
+  font-size: 80px;
+}
+
+.loginsign {
+  display: grid;
+  align-items: center;
+margin-left: 40vw;
+margin-top: 30vh;
+height: 40vh;
+text-align: center;
+width:20vw;
+}
+.b1,.b2{
+  height:10vh;
+  width:100%;
+
+}
+.b1:hover,.b2:hover{
+  height: 15vh;
+  width:100%;
+}
+.Apple{
+  background-image: url("./ok.avif");
 }

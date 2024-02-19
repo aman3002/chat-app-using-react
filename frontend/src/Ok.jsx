@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import "./App.css"
+import img from "./ok.avif"
 function App(p) {
   const [messages, setMessages] = useState([]);
 
@@ -7,9 +8,8 @@ function App(p) {
     const newMessage = { text: message, position: position };
     setMessages([...messages, newMessage]);
   };
-
   return (
-    <div className="App">
+    <div className="Apple" style={{backgroundImage:`url(${img})`,height:'100vh',width:'100vw'}}>
       <div className="messages">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.position}`}>
