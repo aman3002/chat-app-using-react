@@ -142,7 +142,7 @@ io.on("connection", async (socket) => {
     const [room,sender,messa] = [message.room,message.sender,message.message];
     const name = users[socket.id];
     const position = "left";
-    p.forEach(async (item) => {
+    p[z].forEach(async (item) => {
       await add.add_message(name, item, messa, room, position);
   });
     // Ensure room is correctly retrieved from the message object
