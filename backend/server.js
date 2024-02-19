@@ -17,7 +17,6 @@ let p = {};
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
-app.use(passport.session());
 passport.use(
   new localstra(
     {
